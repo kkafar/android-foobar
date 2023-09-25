@@ -2,6 +2,7 @@
     <string name="app_name">foobar</string>
     <string name="modal_button">Im a modal</string>
     <string name="open_modal_button">Open modal</string>
+    <string name="open_fragment">Open Fragment</string>
     <string name="expanded">Expanded</string>
     <string name="half_expanded">HalfExpanded</string>
     <string name="collapsed">Collapsed</string>
