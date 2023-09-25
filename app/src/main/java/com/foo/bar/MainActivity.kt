@@ -8,6 +8,8 @@ import android.widget.Button
 import android.widget.FrameLayout
 import androidx.appcompat.app.AppCompatActivity
 import androidx.coordinatorlayout.widget.CoordinatorLayout
+import androidx.fragment.app.FragmentTransaction
+import androidx.fragment.app.commit
 import com.foo.bar.databinding.ActivityMainBinding
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 
@@ -22,11 +24,21 @@ class MainActivity : AppCompatActivity() {
 
         openModalButton.setOnClickListener {
 //            this.createAndShowModal()
-            attachSomeContent()
+//            attachSomeContent()
+            createAndShowModalWithFragmentTransaction()
         }
 
 
         setContentView(mainBinding.root)
+    }
+
+    private fun createAndShowModalWithFragmentTransaction() {
+        val modal = Modal(createContentView())
+        supportFragmentManager.commit {
+            setReorderingAllowed(true)
+            setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+            add(modal, Modal.TAG)
+        }
     }
 
     private fun createAndShowModal() {
@@ -71,5 +83,11 @@ class MainActivity : AppCompatActivity() {
         return coordinatorLayout
     }
 
-
+    private fun createContentView(): View {
+        val view = View(this)
+        view.setBackgroundColor(Color.DKGRAY)
+        view.layoutParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
+        view.setBackgroundColor(Color.DKGRAY)
+        return view
+    }
 }
