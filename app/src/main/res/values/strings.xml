@@ -7,4 +7,6 @@
     <string name="half_expanded">HalfExpanded</string>
     <string name="collapsed">Collapsed</string>
     <string name="hidden">Hidden</string>
+    <string name="lorem">Lorem ipsum et delai</string>
+    <string name="close">Close</string>
 </resources>
