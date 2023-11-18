@@ -1,6 +1,7 @@
 package com.foo.bar.fragments
 
 import android.app.Dialog
+import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -15,8 +16,8 @@ class ModalBottomSheet(val contentView: View? = null) : BottomSheetDialogFragmen
     constructor() : this(null)
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-       val bottomSheetDialog = super.onCreateDialog(savedInstanceState)
-        bottomSheetDialog.setContentView(contentView!!)
+        val bottomSheetDialog = super.onCreateDialog(savedInstanceState)
+        bottomSheetDialog.setContentView(contentView ?: createContentView())
         return bottomSheetDialog
     }
 
@@ -32,6 +33,18 @@ class ModalBottomSheet(val contentView: View? = null) : BottomSheetDialogFragmen
         super.onViewCreated(view, savedInstanceState)
         Log.i(TAG, "onViewCreated")
     }
+
+    private fun createContentView(): View {
+        val view = View(requireContext())
+        view.setBackgroundColor(Color.DKGRAY)
+        view.layoutParams = ViewGroup.LayoutParams(
+            ViewGroup.LayoutParams.MATCH_PARENT,
+            ViewGroup.LayoutParams.MATCH_PARENT
+        )
+        view.setBackgroundColor(Color.DKGRAY)
+        return view
+    }
+
     companion object {
         const val TAG = "Modal"
     }
