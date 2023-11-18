@@ -13,6 +13,7 @@ import androidx.fragment.app.commit
 import com.foo.bar.R
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.appbar.MaterialToolbar
+import com.google.android.material.transition.MaterialSharedAxis
 
 class RootFragment : Fragment() {
     private lateinit var containerView: CoordinatorLayout
@@ -20,6 +21,8 @@ class RootFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        enterTransition = MaterialSharedAxis(MaterialSharedAxis.X, true)
+        exitTransition = MaterialSharedAxis(MaterialSharedAxis.X, true)
     }
 
     override fun onCreateView(
@@ -30,11 +33,7 @@ class RootFragment : Fragment() {
         // Linear layout with few buttons allowing for basic navigation
         initializeContainerView()
 
-        val buttons = createNavigationButtons()
-
-        for (button in buttons) {
-            appBarLayout.addView(button)
-        }
+        createNavigationButtons().forEach { appBarLayout.addView(it) }
 
         return containerView
     }
