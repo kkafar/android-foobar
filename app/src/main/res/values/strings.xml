@@ -9,4 +9,6 @@
     <string name="hidden">Hidden</string>
     <string name="lorem">Lorem ipsum et delai</string>
     <string name="close">Close</string>
+    <string name="root_fragment_name">RootFragment</string>
+    <string name="root_fragment_tag">RootFragmentTag</string>
 </resources>
