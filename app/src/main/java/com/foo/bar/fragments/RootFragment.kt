@@ -19,7 +19,7 @@ class RootFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         // Linear layout with few buttons allowing for basic navigation
         initializeContainerView()
 
@@ -57,8 +57,11 @@ class RootFragment : Fragment() {
         val openStandardBottomSheetButton = createButton(requireContext().resources.getString(R.string.open_modal_button)) {
             Log.i(TAG, "openStandardBottomSheetButton OnClickListener")
         }
+        val popFragmentButton = createButton(requireContext().resources.getString(R.string.pop_fragment)) {
+            Log.i(TAG, "popFragmentButton OnClickListener")
+        }
 
-        return listOf(navForwardButton, openStandardBottomSheetButton)
+        return listOf(navForwardButton, openStandardBottomSheetButton, popFragmentButton)
     }
 
     private fun createButton(text: String, onClickListener: View.OnClickListener): Button {
