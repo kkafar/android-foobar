@@ -51,17 +51,14 @@ class RootFragment : Fragment() {
     }
 
     private fun createNavigationButtons(): List<Button> {
-        val navForwardButton = createButton(requireContext().resources.getString(R.string.open_fragment)) {
-            Log.i(TAG, "navForwardButton OnClickListener")
+        val res = requireContext().resources
+        return listOf(
+            res.getString(R.string.open_fragment),
+            res.getString(R.string.open_modal_button),
+            res.getString(R.string.pop_fragment),
+        ).map { name ->
+            createButton(name) { Log.i(TAG, "$name onClickListener") }
         }
-        val openStandardBottomSheetButton = createButton(requireContext().resources.getString(R.string.open_modal_button)) {
-            Log.i(TAG, "openStandardBottomSheetButton OnClickListener")
-        }
-        val popFragmentButton = createButton(requireContext().resources.getString(R.string.pop_fragment)) {
-            Log.i(TAG, "popFragmentButton OnClickListener")
-        }
-
-        return listOf(navForwardButton, openStandardBottomSheetButton, popFragmentButton)
     }
 
     private fun createButton(text: String, onClickListener: View.OnClickListener): Button {
