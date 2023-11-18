@@ -7,51 +7,80 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
-import android.widget.LinearLayout
+import androidx.coordinatorlayout.widget.CoordinatorLayout
 import com.foo.bar.R
+import com.google.android.material.appbar.AppBarLayout
+import com.google.android.material.appbar.MaterialToolbar
 
 class RootFragment : Fragment() {
-    private lateinit var containerView: LinearLayout
+    private lateinit var containerView: CoordinatorLayout
+    private lateinit var appBarLayout: AppBarLayout
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Linear layout with few buttons allowing for basic navigation
-        containerView = createContainerView()
+        initializeContainerView()
 
         val buttons = createNavigationButtons()
 
         for (button in buttons) {
-            containerView.addView(button)
+            appBarLayout.addView(button)
         }
-
-        // TODO: Should I do it?
-//        container?.addView(containerView)
 
         return containerView
     }
 
-    private fun createContainerView(): LinearLayout = LinearLayout(context).apply {
-        layoutParams = LinearLayout.LayoutParams(
-            LinearLayout.LayoutParams.MATCH_PARENT,
-            LinearLayout.LayoutParams.MATCH_PARENT
-        )
+    private fun initializeContainerView() {
+        containerView = CoordinatorLayout(requireContext()).apply {
+            layoutParams = CoordinatorLayout.LayoutParams(
+                CoordinatorLayout.LayoutParams.MATCH_PARENT,
+                CoordinatorLayout.LayoutParams.MATCH_PARENT
+            )
+        }
+        appBarLayout = AppBarLayout(requireContext()).apply {
+            addView(createToolbar())
+            layoutParams = AppBarLayout.LayoutParams(
+                AppBarLayout.LayoutParams.MATCH_PARENT,
+                AppBarLayout.LayoutParams.WRAP_CONTENT
+            )
+        }
+
+        containerView.addView(appBarLayout)
     }
 
     private fun createNavigationButtons(): List<Button> {
-        val navForwardButton = Button(context).apply {
-            layoutParams = LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT
-            )
-            setOnClickListener {
-               Log.i(TAG, "navForwardButton OnClickListener")
-            }
-            text = context.resources.getString(R.string.open_fragment)
+        val navForwardButton = createButton(requireContext().resources.getString(R.string.open_fragment)) {
+            Log.i(TAG, "navForwardButton OnClickListener")
+        }
+        val openStandardBottomSheetButton = createButton(requireContext().resources.getString(R.string.open_modal_button)) {
+            Log.i(TAG, "openStandardBottomSheetButton OnClickListener")
         }
 
-        return listOf(navForwardButton)
+        return listOf(navForwardButton, openStandardBottomSheetButton)
+    }
+
+    private fun createButton(text: String, onClickListener: View.OnClickListener): Button {
+        val button = Button(context).apply {
+            layoutParams = AppBarLayout.LayoutParams(
+                AppBarLayout.LayoutParams.MATCH_PARENT,
+                AppBarLayout.LayoutParams.WRAP_CONTENT
+            )
+            this.text = text
+            setOnClickListener(onClickListener)
+        }
+        return button
+    }
+
+    private fun createToolbar(): MaterialToolbar {
+        val toolbar = MaterialToolbar(requireContext())
+        toolbar.layoutParams = AppBarLayout.LayoutParams(
+            AppBarLayout.LayoutParams.MATCH_PARENT,
+            AppBarLayout.LayoutParams.WRAP_CONTENT,
+        )
+        toolbar.title = requireContext().resources.getString(R.string.root_fragment_name)
+        return toolbar
     }
 
     companion object {
