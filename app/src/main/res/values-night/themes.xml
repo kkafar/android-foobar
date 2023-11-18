@@ -3,5 +3,12 @@
     <style name="Base.Theme.Foobar" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Customize your dark theme here. -->
         <!-- <item name="colorPrimary">@color/my_dark_primary</item> -->
+        <item name="bottomSheetDialogTheme">@style/ThemeOverlay.Foobar.BottomSheetDialog</item>
+    </style>
+
+    <style name="Theme.Foobar" parent="Base.Theme.Foobar" />
+
+    <style name="ThemeOverlay.Foobar.BottomSheetDialog" parent="ThemeOverlay.Material3.BottomSheetDialog">
+        <item name="bottomSheetStyle">@style/ModalBottomSheetDialog</item>
     </style>
 </resources>
