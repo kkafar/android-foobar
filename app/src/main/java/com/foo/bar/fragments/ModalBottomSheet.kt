@@ -1,4 +1,4 @@
-package com.foo.bar
+package com.foo.bar.fragments
 
 import android.app.Dialog
 import android.os.Bundle

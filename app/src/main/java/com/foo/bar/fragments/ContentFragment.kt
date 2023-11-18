@@ -1,4 +1,4 @@
-package com.foo.bar
+package com.foo.bar.fragments
 
 import android.os.Bundle
 import android.view.LayoutInflater
