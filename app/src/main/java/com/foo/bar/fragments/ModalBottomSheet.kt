@@ -10,14 +10,16 @@ import android.view.ViewGroup
 import com.foo.bar.databinding.FragmentModalBinding
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 
-class ModalBottomSheet(val contentView: View? = null) : BottomSheetDialogFragment() {
+class ModalBottomSheet(contentView: View? = null) : BottomSheetDialogFragment() {
     private lateinit var binding: FragmentModalBinding
+    private var contentView = contentView
 
     constructor() : this(null)
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+        Log.i(TAG, "onCreateDialog")
         val bottomSheetDialog = super.onCreateDialog(savedInstanceState)
-        bottomSheetDialog.setContentView(contentView ?: createContentView())
+        bottomSheetDialog.setContentView(ensureContentView)
         return bottomSheetDialog
     }
 
@@ -26,6 +28,7 @@ class ModalBottomSheet(val contentView: View? = null) : BottomSheetDialogFragmen
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        Log.i(TAG, "onCreateView")
         return null;
     }
 
@@ -44,6 +47,14 @@ class ModalBottomSheet(val contentView: View? = null) : BottomSheetDialogFragmen
         view.setBackgroundColor(Color.DKGRAY)
         return view
     }
+
+    private val ensureContentView: View
+        get() {
+            if (contentView == null) {
+                contentView = createContentView()
+            }
+            return contentView!!
+        }
 
     companion object {
         const val TAG = "Modal"
