@@ -13,13 +13,18 @@ import androidx.fragment.app.commit
 import com.foo.bar.R
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.appbar.MaterialToolbar
+import com.google.android.material.transition.MaterialSharedAxis
 
-class RootFragment : Fragment() {
+class RootFragment(private val light: Boolean) : Fragment() {
     private lateinit var containerView: CoordinatorLayout
     private lateinit var appBarLayout: AppBarLayout
 
+    constructor() : this(true)
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        enterTransition = MaterialSharedAxis(MaterialSharedAxis.X, true)
+        exitTransition = MaterialSharedAxis(MaterialSharedAxis.X, true)
     }
 
     override fun onCreateView(
@@ -29,12 +34,9 @@ class RootFragment : Fragment() {
         Log.i(TAG, "onCreateView")
         // Linear layout with few buttons allowing for basic navigation
         initializeContainerView()
+        setBackgroundColor()
 
-        val buttons = createNavigationButtons()
-
-        for (button in buttons) {
-            appBarLayout.addView(button)
-        }
+        createNavigationButtons().forEach { appBarLayout.addView(it) }
 
         return containerView
     }
@@ -54,6 +56,17 @@ class RootFragment : Fragment() {
             )
         }
         containerView.addView(appBarLayout)
+    }
+
+    private fun setBackgroundColor() {
+        val color = requireContext().resources.getColor(if (light) R.color.colorPrimary else R.color.colorSecondary, requireContext().theme)
+        val colorContainer = requireContext().resources.getColor(
+            if (light) R.color.colorPrimaryContainer else R.color.colorSecondaryContainer,
+            requireContext().theme
+        )
+
+        containerView.setBackgroundColor(colorContainer)
+        appBarLayout.setBackgroundColor(color)
     }
 
     private fun createNavigationButtons(): List<Button> {
@@ -95,7 +108,7 @@ class RootFragment : Fragment() {
         return toolbar
     }
 
-    private fun createNewRootFragment(): RootFragment = RootFragment()
+    private fun createNewRootFragment(): RootFragment = RootFragment(!light)
 
     private fun navigateToFragment(fragment: Fragment) {
         Log.i(TAG, "Navigating to next Fragment")
