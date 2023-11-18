@@ -1,6 +1,7 @@
 package com.foo.bar.fragments
 
 import android.app.Dialog
+import android.content.Context
 import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
@@ -8,6 +9,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.foo.bar.databinding.FragmentModalBinding
+import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 
 class ModalBottomSheet(contentView: View? = null) : BottomSheetDialogFragment() {
@@ -18,7 +21,13 @@ class ModalBottomSheet(contentView: View? = null) : BottomSheetDialogFragment() 
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         Log.i(TAG, "onCreateDialog")
-        val bottomSheetDialog = super.onCreateDialog(savedInstanceState)
+        val bottomSheetDialog: BottomSheetDialog = super.onCreateDialog(savedInstanceState) as BottomSheetDialog
+        bottomSheetDialog.apply {
+            behavior.apply {
+                halfExpandedRatio = 0.3F
+                state = BottomSheetBehavior.STATE_HALF_EXPANDED
+            }
+        }
         bottomSheetDialog.setContentView(ensureContentView)
         return bottomSheetDialog
     }
@@ -31,7 +40,6 @@ class ModalBottomSheet(contentView: View? = null) : BottomSheetDialogFragment() 
         Log.i(TAG, "onCreateView")
         return null;
     }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         Log.i(TAG, "onViewCreated")
@@ -39,12 +47,12 @@ class ModalBottomSheet(contentView: View? = null) : BottomSheetDialogFragment() 
 
     private fun createContentView(): View {
         val view = View(requireContext())
-        view.setBackgroundColor(Color.DKGRAY)
         view.layoutParams = ViewGroup.LayoutParams(
             ViewGroup.LayoutParams.MATCH_PARENT,
             ViewGroup.LayoutParams.MATCH_PARENT
         )
         view.setBackgroundColor(Color.DKGRAY)
+//        view.clipToOutline = true
         return view
     }
 
