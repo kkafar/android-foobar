@@ -7,11 +7,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.foo.bar.databinding.FragmentModalBinding
-import com.google.android.material.bottomsheet.BottomSheetBehavior
-import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 
-class Modal(val contentView: View? = null) : BottomSheetDialogFragment() {
+class ModalBottomSheet(val contentView: View? = null) : BottomSheetDialogFragment() {
     private lateinit var binding: FragmentModalBinding
 
     constructor() : this(null)

@@ -98,17 +98,17 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun createAndShowModalWithFragmentTransaction() {
-        val modal = Modal(createContentView())
+        val modalBottomSheet = ModalBottomSheet(createContentView())
         supportFragmentManager.commit {
             setReorderingAllowed(true)
             setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-            add(modal, Modal.TAG)
+            add(modalBottomSheet, ModalBottomSheet.TAG)
         }
     }
 
     private fun createAndShowModal() {
-        val modal = Modal()
-        modal.show(supportFragmentManager, Modal.TAG)
+        val modalBottomSheet = ModalBottomSheet()
+        modalBottomSheet.show(supportFragmentManager, ModalBottomSheet.TAG)
     }
 
     private fun attachSomeContent() {
