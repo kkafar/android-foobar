@@ -28,16 +28,6 @@ class MainActivity : AppCompatActivity() {
     private lateinit var layout: CoordinatorLayout
     private lateinit var appbarLayout: AppBarLayout
 
-    private val onBackPressedCallback = object : OnBackPressedCallback(true) {
-        override fun handleOnBackPressed() {
-            Log.i(TAG, "handleOnBackPressed invoked")
-        }
-    }
-
-    override fun onBackPressed() {
-        super.onBackPressed()
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         mainBinding = ActivityMainBinding.inflate(layoutInflater)
@@ -64,7 +54,6 @@ class MainActivity : AppCompatActivity() {
 //                setReorderingAllowed(true)
 //                add(contentFragment, "ContentFragmentTag")
 //            }
-            onBackPressedCallback.isEnabled = !onBackPressedCallback.isEnabled
         }
 
         setContentView(mainBinding.root)
@@ -94,7 +83,6 @@ class MainActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        onBackPressedDispatcher.addCallback(this, onBackPressedCallback)
     }
 
     private fun createAndShowModalWithFragmentTransaction() {
