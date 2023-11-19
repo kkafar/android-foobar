@@ -1,17 +1,16 @@
 package com.foo.bar.fragments
 
 import android.app.Dialog
-import android.content.Context
 import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.LinearLayout
+import androidx.core.view.children
 import com.foo.bar.databinding.FragmentModalBinding
-import com.foo.bar.ext.parentView
-import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.foo.bar.ext.parentAsView
+import com.foo.bar.ext.parentAsViewGroup
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 
@@ -29,9 +28,11 @@ class ModalBottomSheet(contentView: View? = null) : BottomSheetDialogFragment() 
                 halfExpandedRatio = 0.3F
 //                state = BottomSheetBehavior.STATE_HALF_EXPANDED
             }
+            setCanceledOnTouchOutside(false)
+            dismissWithAnimation = true
         }
-        bottomSheetDialog.setContentView(ensureContentView)
-        ensureContentView.parentView()?.clipToOutline = true
+//        bottomSheetDialog.setContentView(ensureContentView)
+//        disableDimmingView()
         return bottomSheetDialog
     }
 
@@ -41,12 +42,17 @@ class ModalBottomSheet(contentView: View? = null) : BottomSheetDialogFragment() 
         savedInstanceState: Bundle?
     ): View? {
         Log.i(TAG, "onCreateView")
-        return null;
+//        return null;
 //        return createContentView()
+        return ensureContentView
     }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         Log.i(TAG, "onViewCreated")
         super.onViewCreated(view, savedInstanceState)
+        ensureContentView.parentAsView()?.clipToOutline = true
+
+//        disableDimmingView()
     }
 
     private fun createContentView(): View {
@@ -60,6 +66,11 @@ class ModalBottomSheet(contentView: View? = null) : BottomSheetDialogFragment() 
         view.setBackgroundColor(Color.DKGRAY)
         view.clipToOutline = true
         return view
+    }
+
+    private fun disableDimmingView() {
+        Log.i(TAG, "Disabling dimming view")
+        ensureContentView.parentAsView()?.parentAsViewGroup()?.removeViewAt(0)
     }
 
     private val ensureContentView: View
