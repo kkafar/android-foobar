@@ -8,7 +8,9 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
 import com.foo.bar.databinding.FragmentModalBinding
+import com.foo.bar.ext.parentView
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
@@ -25,10 +27,11 @@ class ModalBottomSheet(contentView: View? = null) : BottomSheetDialogFragment() 
         bottomSheetDialog.apply {
             behavior.apply {
                 halfExpandedRatio = 0.3F
-                state = BottomSheetBehavior.STATE_HALF_EXPANDED
+//                state = BottomSheetBehavior.STATE_HALF_EXPANDED
             }
         }
         bottomSheetDialog.setContentView(ensureContentView)
+        ensureContentView.parentView()?.clipToOutline = true
         return bottomSheetDialog
     }
 
@@ -39,20 +42,23 @@ class ModalBottomSheet(contentView: View? = null) : BottomSheetDialogFragment() 
     ): View? {
         Log.i(TAG, "onCreateView")
         return null;
+//        return createContentView()
     }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
         Log.i(TAG, "onViewCreated")
+        super.onViewCreated(view, savedInstanceState)
     }
 
     private fun createContentView(): View {
+//        val linearLayout = LinearLayout
+
         val view = View(requireContext())
         view.layoutParams = ViewGroup.LayoutParams(
             ViewGroup.LayoutParams.MATCH_PARENT,
             ViewGroup.LayoutParams.MATCH_PARENT
         )
         view.setBackgroundColor(Color.DKGRAY)
-//        view.clipToOutline = true
+        view.clipToOutline = true
         return view
     }
 
