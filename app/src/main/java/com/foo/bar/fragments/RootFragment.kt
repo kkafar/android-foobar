@@ -93,15 +93,19 @@ class RootFragment(private val light: Boolean) : Fragment() {
             Log.i(TAG, "navForwardButton onClickListener")
             navigateToFragment(createNewRootFragment())
         }
-        val openStandardModalButton = createButton(res.getString(R.string.open_modal_button)) {
-            Log.i(TAG, "openStandardModalButton onClickListener")
+        val openModalSheetButton = createButton(res.getString(R.string.open_modal_button)) {
+            Log.i(TAG, "openModalSheetButton onClickListener")
             showModalWithExplicitFragmentTransaction(ModalBottomSheet())
+        }
+        val openStandardSheetButton = createButton(res.getString(R.string.open_sheet_button)) {
+            Log.i(TAG, "openStandardSheetButton onClickListener")
+            showStandardSheetWithExplicitFragmentTransaction(StandardBottomSheet())
         }
         val popFragmentButton = createButton(res.getString(R.string.pop_fragment)) {
             Log.i(TAG, "popFragmentButton onClickListener")
             removeFragmentFromStack(this)
         }
-        return listOf(navForwardButton, openStandardModalButton, popFragmentButton)
+        return listOf(navForwardButton, openModalSheetButton, openStandardSheetButton, popFragmentButton)
     }
 
     private fun createButton(text: String, onClickListener: View.OnClickListener): Button {
@@ -143,6 +147,16 @@ class RootFragment(private val light: Boolean) : Fragment() {
         parentFragmentManager.commit(allowStateLoss = true) {
             setReorderingAllowed(true)
             add(fragment, null)
+        }
+    }
+
+    private fun showStandardSheetWithExplicitFragmentTransaction(fragment: Fragment) {
+        Log.i(TAG, "Opening standard sheet fragment")
+        parentFragmentManager.commit(allowStateLoss = true) {
+            setReorderingAllowed(true)
+            setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+            // Note that in case of standard bottom sheet, it must be added to container view...
+            add(R.id.fragment_container_view, fragment, null)
         }
     }
 

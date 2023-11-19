@@ -1,8 +1,9 @@
 <resources>
     <string name="app_name">foobar</string>
     <string name="modal_button">Im a modal</string>
-    <string name="open_modal_button">Open modal</string>
+    <string name="open_modal_button">Open modal sheet</string>
     <string name="open_fragment">Open Next Normal Stack Fragment</string>
+    <string name="open_sheet_button">Open standard sheet</string>
     <string name="pop_fragment">Pop Stack Fragment</string>
     <string name="expanded">Expanded</string>
     <string name="half_expanded">HalfExpanded</string>
@@ -12,4 +13,5 @@
     <string name="close">Close</string>
     <string name="root_fragment_name">RootFragment</string>
     <string name="root_fragment_tag">RootFragmentTag</string>
+    <string name="standard_sheet_name">StandardBottomSheet</string>
 </resources>
