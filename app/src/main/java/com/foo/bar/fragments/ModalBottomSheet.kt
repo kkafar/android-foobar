@@ -64,7 +64,6 @@ class ModalBottomSheet(contentView: View? = null) : BottomSheetDialogFragment() 
             ViewGroup.LayoutParams.MATCH_PARENT
         )
         view.setBackgroundColor(Color.DKGRAY)
-        view.clipToOutline = true
         return view
     }
 
