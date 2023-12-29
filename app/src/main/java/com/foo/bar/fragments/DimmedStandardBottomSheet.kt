@@ -81,17 +81,11 @@ class DimmedStandardBottomSheet : Fragment(), LifecycleEventObserver, Animation.
         childFragmentManager.commit(allowStateLoss = true) {
             setReorderingAllowed(true)
             add(requireView().id, createBottomSheetFragment(), "StandardBottomSheet")
-//            add(StandardBottomSheet(), "StandardBottomSheet")
         }
     }
 
     override fun onResume() {
         super.onResume()
-//        childFragmentManager.commit(allowStateLoss = true) {
-//            setReorderingAllowed(true)
-//            add(requireView().id, StandardBottomSheet(), "StandardBottomSheet")
-////            add(StandardBottomSheet(), "StandardBottomSheet")
-//        }
     }
 
     private fun createBottomSheetFragment(): StandardBottomSheet {
@@ -131,4 +125,6 @@ class DimmedStandardBottomSheet : Fragment(), LifecycleEventObserver, Animation.
     }
 
     override fun onAnimationRepeat(animation: Animation?) = Unit
+
+    
 }
