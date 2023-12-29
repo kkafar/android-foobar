@@ -99,7 +99,8 @@ class RootFragment(private val light: Boolean) : Fragment() {
         }
         val openStandardSheetButton = createButton(res.getString(R.string.open_sheet_button)) {
             Log.i(TAG, "openStandardSheetButton onClickListener")
-            showStandardSheetWithExplicitFragmentTransaction(StandardBottomSheet())
+            showStandardSheetWithExplicitFragmentTransaction(DimmedStandardBottomSheet())
+//            showStandardSheetWithExplicitFragmentTransaction(StandardBottomSheet())
         }
         val popFragmentButton = createButton(res.getString(R.string.pop_fragment)) {
             Log.i(TAG, "popFragmentButton onClickListener")
@@ -156,7 +157,7 @@ class RootFragment(private val light: Boolean) : Fragment() {
             setReorderingAllowed(true)
             setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
             // Note that in case of standard bottom sheet, it must be added to container view...
-            add(R.id.fragment_container_view, fragment, null)
+            add(R.id.fragment_container_view, fragment, "Sheet")
         }
     }
 
