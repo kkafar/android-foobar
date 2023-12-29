@@ -7,10 +7,12 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowManager
 import androidx.core.view.children
 import com.foo.bar.databinding.FragmentModalBinding
 import com.foo.bar.ext.parentAsView
 import com.foo.bar.ext.parentAsViewGroup
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 
@@ -26,13 +28,16 @@ class ModalBottomSheet(contentView: View? = null) : BottomSheetDialogFragment() 
         bottomSheetDialog.apply {
             behavior.apply {
                 halfExpandedRatio = 0.3F
-//                state = BottomSheetBehavior.STATE_HALF_EXPANDED
+                state = BottomSheetBehavior.STATE_HALF_EXPANDED
             }
             setCanceledOnTouchOutside(false)
             dismissWithAnimation = true
         }
 //        bottomSheetDialog.setContentView(ensureContentView)
 //        disableDimmingView()
+//        bottomSheetDialog.window?.setDimAmount(0F)
+        bottomSheetDialog.window?.clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND)
+        bottomSheetDialog.window?.setFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND, WindowManager.LayoutParams.FLAG_DIM_BEHIND)
         return bottomSheetDialog
     }
 
