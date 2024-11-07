@@ -26,6 +26,7 @@ import com.google.android.material.shape.CornerFamily
 import com.google.android.material.shape.CornerTreatment
 import com.google.android.material.shape.MaterialShapeDrawable
 import com.google.android.material.shape.ShapeAppearanceModel
+import com.google.android.material.textfield.TextInputEditText
 
 class StandardBottomSheet : Fragment() {
     private lateinit var containerView: CoordinatorLayout
