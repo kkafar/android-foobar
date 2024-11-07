@@ -117,6 +117,7 @@ class RootFragment(private val light: Boolean) : Fragment() {
                 LinearLayout.LayoutParams.WRAP_CONTENT
             )
             this.text = text
+            this.elevation = 40f
             setOnClickListener(onClickListener)
         }
         return button

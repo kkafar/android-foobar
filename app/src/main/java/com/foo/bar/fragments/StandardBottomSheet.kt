@@ -10,9 +10,13 @@ import android.view.ViewGroup
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import android.widget.Button
+import android.widget.EditText
 import android.widget.FrameLayout
 import android.widget.LinearLayout
+import android.widget.ScrollView
 import androidx.coordinatorlayout.widget.CoordinatorLayout
+import androidx.core.view.setPadding
+import androidx.core.widget.NestedScrollView
 import androidx.fragment.app.commit
 import com.foo.bar.R
 import com.google.android.material.appbar.AppBarLayout
@@ -28,8 +32,13 @@ class StandardBottomSheet : Fragment() {
     private lateinit var bottomSheet: ViewGroup
     private lateinit var contentView: ViewGroup
 
+//    private lateinit var scrollableContentView: ScrollView
+    private lateinit var scrollableContentView: NestedScrollView
+
     override fun onCreateAnimation(transit: Int, enter: Boolean, nextAnim: Int): Animation? {
-        return AnimationUtils.loadAnimation(context, if (enter) R.anim.slide_in_bottom else R.anim.slide_out_bottom)
+        return AnimationUtils.loadAnimation(
+            context, if (enter) R.anim.slide_in_bottom else R.anim.slide_out_bottom
+        )
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -38,8 +47,7 @@ class StandardBottomSheet : Fragment() {
     }
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
         Log.i(TAG, "onCreateView")
         initializeViewHierarchy()
@@ -47,17 +55,65 @@ class StandardBottomSheet : Fragment() {
         return containerView
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        Log.i(TAG, "onViewCreated")
+
+    }
+
+    private fun createEditText(): EditText {
+        val editText = TextInputEditText(requireContext()).apply {
+            layoutParams = ViewGroup.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT
+            )
+
+        }
+        return editText
+    }
+
     private fun initializeViewHierarchy() {
         initializeContainerView()
         initializeBottomSheet()
         initializeContentView()
+        initializeScrollableContentView()
 
-        bottomSheet.addView(contentView)
+//        bottomSheet.addView(contentView)
+        bottomSheet.addView(scrollableContentView)
+
         containerView.addView(bottomSheet)
 
-        bottomSheet.clipChildren = true
+//        bottomSheet.clipChildren = true
         bottomSheet.clipToOutline = true
-        attachShapeToView(bottomSheet)
+//        bottomSheet.clipToPadding = true
+
+        attachShapeToView(bottomSheet, cornerSize = 40f)
+//        bottomSheet.setPadding(0, 40, 0, 0)
+
+//        attachShapeToView(contentView, cornerSize = 40f)
+//        contentView.setPadding(0, 20, 0, 0)
+
+//        containerView.elevation = 10f
+        bottomSheet.elevation = 40f
+
+//        contentView.elevation = 20f
+//
+    }
+
+    private fun initializeScrollableContentView() {
+//        scrollableContentView = ScrollView(requireContext()).apply {
+//            addView(contentView)
+//            layoutParams = FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.WRAP_CONTENT)
+//            isNestedScrollingEnabled = true
+//            isEnabled
+//        }
+
+        scrollableContentView = NestedScrollView(requireContext()).apply {
+            addView(contentView)
+            layoutParams = FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.WRAP_CONTENT)
+            isNestedScrollingEnabled = true
+            isEnabled
+        }
     }
 
     private fun initializeContainerView() {
@@ -66,9 +122,9 @@ class StandardBottomSheet : Fragment() {
                 ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.MATCH_PARENT,
             )
-//            setBackgroundColor(Color.BLACK)
+            setBackgroundColor(Color.TRANSPARENT)
 //            setBackgroundColor(Color.argb(0.5F, 0F, 0F, 0F))
-            alpha = 1.0F
+//            alpha = 1.0F
         }
     }
 
@@ -93,44 +149,50 @@ class StandardBottomSheet : Fragment() {
                                 }
                             }
                         }
+
                         override fun onSlide(bottomSheet: View, slideOffset: Float) = Unit
                     })
                 }
             }
         }
-//        bottomSheet.setBackgroundColor(requireContext().resources.getColor(R.color.colorSecondary, requireContext().theme))
+        bottomSheet.setBackgroundColor(
+            requireContext().resources.getColor(
+                R.color.colorSecondary, requireContext().theme
+            )
+        )
     }
 
     private fun initializeContentView() {
         contentView = LinearLayout(requireContext()).apply {
             layoutParams = FrameLayout.LayoutParams(
-                FrameLayout.LayoutParams.MATCH_PARENT,
-                FrameLayout.LayoutParams.MATCH_PARENT
+                FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT
             )
             orientation = LinearLayout.VERTICAL
         }
 
-        createButtonsForContentView().forEach {
+        createButtonsForContentView(n = 10).forEach {
             contentView.addView(it)
         }
-        contentView.setBackgroundColor(requireContext().resources.getColor(R.color.colorSecondary, requireContext().theme))
+//        contentView.setBackgroundColor(requireContext().resources.getColor(R.color.colorOnSecondary, requireContext().theme))
+        contentView.setBackgroundColor(Color.WHITE)
+//        contentView.setPadding(40)
+//        contentView.elevation = 12f
     }
 
-    private fun createButtonsForContentView(): List<Button> {
+    private fun createButtonsForContentView(n: Int = 10): List<Button> {
         val res = requireContext().resources
-        return listOf(
-           createButton(res.getString(R.string.pop_fragment)) {
-               Log.i(TAG, "Popping StandardBottomSheet")
-           }
-        )
+        return generateSequence {
+            createButton(res.getString(R.string.pop_fragment)) {
+                Log.i(TAG, "Popping StandardBottomSheet")
+            }
+        }.take(n).toList()
     }
 
     private fun createButton(text: String, onClickListener: View.OnClickListener): Button {
         Log.i(RootFragment.TAG, "createButton")
         val button = Button(context).apply {
             layoutParams = AppBarLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT
+                LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT
             )
             this.text = text
             setOnClickListener(onClickListener)
@@ -138,13 +200,14 @@ class StandardBottomSheet : Fragment() {
         return button
     }
 
-    private fun attachShapeToView(view: View) {
+    private fun attachShapeToView(view: View, cornerSize: Float = 20f) {
         val shapeAppearanceModel = ShapeAppearanceModel.Builder().apply {
-            setTopLeftCorner(CornerFamily.ROUNDED, 20F)
-            setTopRightCorner(CornerFamily.ROUNDED, 20F)
+            setTopLeftCorner(CornerFamily.ROUNDED, cornerSize)
+            setTopRightCorner(CornerFamily.ROUNDED, cornerSize)
         }.build()
         val shape = MaterialShapeDrawable(shapeAppearanceModel)
-        view.background = shape;
+        shape.setTint(Color.WHITE)
+        view.background = shape
     }
 
     companion object {
