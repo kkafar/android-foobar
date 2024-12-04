@@ -15,15 +15,14 @@ class SheetView(context: Context, dismissalDelegate: FragmentDismissalDelegate? 
     val sheetBehavior: BottomSheetBehavior<SheetView>
         get() = castedLayoutParams.behavior as BottomSheetBehavior<SheetView>
 
-    private var contentView: SheetContentView
+    val contentView: SheetContentView = SheetContentView(context, tileCount = 3, dismissalDelegate = dismissalDelegate).apply {
+        layoutParams = FrameLayout.LayoutParams(
+            FrameLayout.LayoutParams.MATCH_PARENT,
+            FrameLayout.LayoutParams.MATCH_PARENT
+        )
+    }
 
     init {
-        contentView = SheetContentView(context, tileCount = 3, dismissalDelegate = dismissalDelegate).apply {
-            layoutParams = FrameLayout.LayoutParams(
-                FrameLayout.LayoutParams.MATCH_PARENT,
-                FrameLayout.LayoutParams.MATCH_PARENT
-            )
-        }
         setBackgroundColor(Color.WHITE)
         addView(contentView)
     }
