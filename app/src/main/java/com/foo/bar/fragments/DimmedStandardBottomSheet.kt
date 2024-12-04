@@ -57,8 +57,8 @@ class DimmedStandardBottomSheet : Fragment(), LifecycleEventObserver, Animation.
             )
 //            setBackgroundColor(Color.BLACK)
             setBackgroundColor(Color.TRANSPARENT)
-//            alpha = 0.4f
-            alpha = 0f
+            alpha = 0.4f
+//            alpha = 0f
             id = View.generateViewId()
         }
     }

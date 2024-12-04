@@ -7,11 +7,16 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.ImageView
 import android.widget.LinearLayout
 import androidx.coordinatorlayout.widget.CoordinatorLayout
+import androidx.core.view.drawToBitmap
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
 import androidx.fragment.app.commit
+import androidx.fragment.app.commitNow
+import androidx.transition.Slide
+import androidx.transition.Fade
 import com.foo.bar.R
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.appbar.MaterialToolbar
@@ -26,8 +31,10 @@ class RootFragment(private val light: Boolean) : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enterTransition = MaterialSharedAxis(MaterialSharedAxis.X, true)
-        exitTransition = MaterialSharedAxis(MaterialSharedAxis.X, true)
+        enterTransition = Fade(Fade.IN)
+        exitTransition = Slide()
+//        enterTransition = MaterialSharedAxis(MaterialSharedAxis.X, true)
+//        exitTransition = MaterialSharedAxis(MaterialSharedAxis.X, true)
         returnTransition = MaterialSharedAxis(MaterialSharedAxis.X, false)
         reenterTransition = MaterialSharedAxis(MaterialSharedAxis.X, true)
     }
@@ -106,7 +113,16 @@ class RootFragment(private val light: Boolean) : Fragment() {
             Log.i(TAG, "popFragmentButton onClickListener")
             removeFragmentFromStack(this)
         }
-        return listOf(navForwardButton, openModalSheetButton, openStandardSheetButton, popFragmentButton)
+        val replaceContentWithSnapshotButton = createButton(res.getString(R.string.replace_content)) {
+            Log.i(TAG, "replaceContentWithSnapshotButton onClickListener")
+            val bitmap = linearLayout.drawToBitmap()
+            val snapshot = ImageView(context)
+            snapshot.setImageBitmap(bitmap)
+
+            containerView.removeView(linearLayout)
+            containerView.addView(snapshot)
+        }
+        return listOf(navForwardButton, openModalSheetButton, openStandardSheetButton, popFragmentButton, replaceContentWithSnapshotButton)
     }
 
     private fun createButton(text: String, onClickListener: View.OnClickListener): Button {
@@ -137,9 +153,9 @@ class RootFragment(private val light: Boolean) : Fragment() {
 
     private fun navigateToFragment(fragment: Fragment) {
         Log.i(TAG, "Navigating to next Fragment")
-        parentFragmentManager.commit(allowStateLoss = true) {
+        parentFragmentManager.commitNow(allowStateLoss = true) {
             setReorderingAllowed(true)
-            setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+//            setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
             add(R.id.fragment_container_view, fragment, null)
         }
     }
@@ -156,7 +172,7 @@ class RootFragment(private val light: Boolean) : Fragment() {
         Log.i(TAG, "Opening standard sheet fragment")
         parentFragmentManager.commit(allowStateLoss = true) {
             setReorderingAllowed(true)
-            setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+//            setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
             // Note that in case of standard bottom sheet, it must be added to container view...
             add(R.id.fragment_container_view, fragment, "Sheet")
         }
@@ -168,9 +184,9 @@ class RootFragment(private val light: Boolean) : Fragment() {
             Log.i(TAG, "Popping won't be performed as last fragment can't be popped")
             return
         }
-        parentFragmentManager.commit(allowStateLoss = true) {
+        parentFragmentManager.commitNow(allowStateLoss = true) {
             setReorderingAllowed(true)
-            setTransition(FragmentTransaction.TRANSIT_FRAGMENT_CLOSE)
+//            setTransition(FragmentTransaction.TRANSIT_FRAGMENT_CLOSE)
             remove(fragment)
         }
     }
