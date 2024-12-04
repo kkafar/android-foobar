@@ -5,7 +5,7 @@ plugins {
 
 android {
     namespace = "com.foo.bar"
-    compileSdk = 33
+    compileSdk = 35
 
     viewBinding {
         enable = true
@@ -14,7 +14,7 @@ android {
     defaultConfig {
         applicationId = "com.foo.bar"
         minSdk = 26
-        targetSdk = 33
+        targetSdk = 35
         versionCode = 1
         versionName = "1.0"
 

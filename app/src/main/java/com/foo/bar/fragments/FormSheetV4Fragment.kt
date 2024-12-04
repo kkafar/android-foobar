@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentContainerView
 import androidx.fragment.app.commitNow
 import androidx.transition.Fade
 import androidx.transition.Slide
@@ -16,6 +17,10 @@ import androidx.transition.Transition
 import androidx.transition.TransitionSet
 import androidx.transition.Visibility
 import com.foo.bar.FragmentDismissalDelegate
+import com.foo.bar.ext.disassembleSubTreeRootedIn
+import com.foo.bar.ext.endViewTransitionRecursively
+import com.foo.bar.ext.parentAsViewGroup
+import com.foo.bar.ext.startViewTransitionRecursively
 import com.foo.bar.views.CustomCoordinatorLayout
 import com.foo.bar.views.DimmingView
 import com.foo.bar.views.SheetView
@@ -23,9 +28,9 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 
 class FormSheetV4Fragment : Fragment(), FragmentDismissalDelegate {
     // Container
-    private lateinit var containerView: CoordinatorLayout
-    private lateinit var dimmingView: DimmingView
-    private lateinit var sheetView: SheetView
+    private lateinit var containerView: CoordinatorLayout // corresponds to ScreensCoordinatorLayout
+    private lateinit var dimmingView: DimmingView // corresponds to dimming view
+    private lateinit var sheetView: SheetView // corresponds to screen
 
     private val dismissalCallback = object : BottomSheetBehavior.BottomSheetCallback() {
         override fun onStateChanged(bottomSheet: View, newState: Int) {
@@ -122,7 +127,30 @@ class FormSheetV4Fragment : Fragment(), FragmentDismissalDelegate {
                 addTarget(sheetView)
             })
             duration = 500
-        }
+        }.addListener(object : Transition.TransitionListener {
+            private var cancelled = false
+            private var started = false
+
+            override fun onTransitionEnd(transition: Transition) {
+                transition.removeListener(this)
+                if (!cancelled) {
+                    cancelled = true
+                    Log.i(TAG, "onTransitionEnd")
+                    endRemovalTransition()
+                }
+            }
+
+            override fun onTransitionStart(transition: Transition) {
+                if (!started) {
+                    started = true
+                    Log.i(TAG, "onTransitionStart")
+                }
+            }
+            override fun onTransitionCancel(transition: Transition) = Unit
+            override fun onTransitionPause(transition: Transition) = Unit
+            override fun onTransitionResume(transition: Transition) = Unit
+
+        })
     }
 
     private fun dismissSelf() {
@@ -133,10 +161,57 @@ class FormSheetV4Fragment : Fragment(), FragmentDismissalDelegate {
     }
 
     override fun dismissFragment() {
+        if (!MIMIC_RN_DISMISS) {
+            dismissSelf()
+        } else {
+            dismissMimickingReactNativeSetup()
+        }
+    }
+
+    private fun dismissMimickingReactNativeSetup() {
+        // Step 1 - mark all views as transitioning
+        startRemovalTransition()
+
+        // Step 2 - disassemble the view hierarchy from container down
+        disassembleViewHierarchyBottomUpPhaseOne()
+
+        // Step 3 - Mimic update on Screen Stack
         dismissSelf()
+
+        // Step 4 - disassemble the view hierarchy from fragment container down (screen stack down)
+        disassembleViewHierarchyBottomUpPhaseTwo()
+    }
+
+    private fun startRemovalTransition() {
+        val fragmentContainer = containerView.parentAsViewGroup()
+        assert(fragmentContainer is FragmentContainerView)
+
+        fragmentContainer!!.startViewTransitionRecursively(containerView)
+    }
+
+    private fun endRemovalTransition() {
+        val fragmentContainer = containerView.parentAsViewGroup()
+        assert(fragmentContainer is FragmentContainerView)
+
+        fragmentContainer!!.endViewTransitionRecursively(containerView)
+    }
+
+    private fun disassembleViewHierarchyBottomUpPhaseOne() {
+        // Disassemble everything under screen
+        sheetView.disassembleSubTreeRootedIn(sheetView.contentView)
+    }
+
+    private fun disassembleViewHierarchyBottomUpPhaseTwo() {
+        val fragmentContainer = containerView.parentAsViewGroup()
+        assert(fragmentContainer is FragmentContainerView)
+
+        fragmentContainer!!.disassembleSubTreeRootedIn(containerView)
+
     }
 
     companion object {
         const val TAG = "FormSheetV4Fragment"
+
+        const val MIMIC_RN_DISMISS = true
     }
 }
