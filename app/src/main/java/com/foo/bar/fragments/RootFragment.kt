@@ -84,7 +84,10 @@ class RootFragment(private val light: Boolean) : Fragment() {
     }
 
     private fun setBackgroundColor() {
-        val color = requireContext().resources.getColor(if (light) R.color.colorPrimary else R.color.colorSecondary, requireContext().theme)
+        val color = requireContext().resources.getColor(
+            if (light) R.color.colorPrimary else R.color.colorSecondary,
+            requireContext().theme
+        )
         val colorContainer = requireContext().resources.getColor(
             if (light) R.color.colorPrimaryContainer else R.color.colorSecondaryContainer,
             requireContext().theme
@@ -113,20 +116,32 @@ class RootFragment(private val light: Boolean) : Fragment() {
             Log.i(TAG, "popFragmentButton onClickListener")
             removeFragmentFromStack(this)
         }
-        val replaceContentWithSnapshotButton = createButton(res.getString(R.string.replace_content)) {
-            Log.i(TAG, "replaceContentWithSnapshotButton onClickListener")
-            val bitmap = linearLayout.drawToBitmap()
-            val snapshot = ImageView(context)
-            snapshot.setImageBitmap(bitmap)
+        val replaceContentWithSnapshotButton =
+            createButton(res.getString(R.string.replace_content)) {
+                Log.i(TAG, "replaceContentWithSnapshotButton onClickListener")
+                val bitmap = linearLayout.drawToBitmap()
+                val snapshot = ImageView(context)
+                snapshot.setImageBitmap(bitmap)
 
-            containerView.removeView(linearLayout)
-            containerView.addView(snapshot)
+                containerView.removeView(linearLayout)
+                containerView.addView(snapshot)
+            }
+        val showRegularFormSheetButton = createButton(res.getString(R.string.regular_formsheet_fragment)) {
+            Log.i(TAG, "showRegularFormSheetButton onClickListener")
+            navigateToRegularFormSheet()
         }
-        return listOf(navForwardButton, openModalSheetButton, openStandardSheetButton, popFragmentButton, replaceContentWithSnapshotButton)
+        return listOf(
+            navForwardButton,
+            openModalSheetButton,
+            openStandardSheetButton,
+            popFragmentButton,
+            replaceContentWithSnapshotButton,
+            showRegularFormSheetButton
+        )
     }
 
     private fun createButton(text: String, onClickListener: View.OnClickListener): Button {
-        Log.i(TAG, "createButton")
+        Log.i(TAG, "createButton: $text")
         val button = Button(context).apply {
             layoutParams = AppBarLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
@@ -157,6 +172,14 @@ class RootFragment(private val light: Boolean) : Fragment() {
             setReorderingAllowed(true)
 //            setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
             add(R.id.fragment_container_view, fragment, null)
+        }
+    }
+
+    private fun navigateToRegularFormSheet() {
+        Log.i(TAG, "Navigate to regular FormSheet")
+        parentFragmentManager.commitNow(allowStateLoss = true) {
+            setReorderingAllowed(true)
+            add(R.id.fragment_container_view, FormSheetV4Fragment(), null)
         }
     }
 
