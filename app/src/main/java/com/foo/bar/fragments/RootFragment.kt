@@ -1,5 +1,6 @@
 package com.foo.bar.fragments
 
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.view.Gravity
@@ -18,6 +19,7 @@ import androidx.fragment.app.commitNow
 import androidx.transition.Slide
 import androidx.transition.Fade
 import com.foo.bar.R
+import com.foo.bar.ext.ColorUtils
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.transition.MaterialSharedAxis
@@ -32,11 +34,11 @@ class RootFragment(private val light: Boolean) : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enterTransition = Fade(Fade.IN)
-        exitTransition = Slide()
+        exitTransition = Fade(Fade.OUT)
 //        enterTransition = MaterialSharedAxis(MaterialSharedAxis.X, true)
 //        exitTransition = MaterialSharedAxis(MaterialSharedAxis.X, true)
-        returnTransition = MaterialSharedAxis(MaterialSharedAxis.X, false)
-        reenterTransition = MaterialSharedAxis(MaterialSharedAxis.X, true)
+//        returnTransition = MaterialSharedAxis(MaterialSharedAxis.X, false)
+//        reenterTransition = MaterialSharedAxis(MaterialSharedAxis.X, true)
     }
 
     override fun onCreateView(
@@ -80,7 +82,22 @@ class RootFragment(private val light: Boolean) : Fragment() {
         }
         createNavigationButtons().forEach { linearLayout.addView(it) }
 
+        linearLayout.addView(createMosaicTile(requireContext()))
+
         containerView.addView(linearLayout)
+    }
+
+    private fun createMosaicTile(context: Context): View {
+        return View(context).apply {
+            layoutParams = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                200
+            ).apply {
+                bottomMargin = 50
+            }
+            setBackgroundColor(ColorUtils.randomColor())
+            elevation = 24f
+        }
     }
 
     private fun setBackgroundColor() {
@@ -130,18 +147,28 @@ class RootFragment(private val light: Boolean) : Fragment() {
             Log.i(TAG, "showRegularFormSheetButton onClickListener")
             navigateToRegularFormSheet()
         }
-        return listOf(
-            navForwardButton,
-            openModalSheetButton,
-            openStandardSheetButton,
-            popFragmentButton,
-            replaceContentWithSnapshotButton,
-            showRegularFormSheetButton
-        )
+        return if (parentFragmentManager.fragments.size == 1) {
+            listOf(
+                navForwardButton,
+                openModalSheetButton,
+                openStandardSheetButton,
+                replaceContentWithSnapshotButton,
+                showRegularFormSheetButton
+            )
+        } else {
+            listOf(
+                navForwardButton,
+                openModalSheetButton,
+                openStandardSheetButton,
+                popFragmentButton,
+                replaceContentWithSnapshotButton,
+                showRegularFormSheetButton
+            )
+        }
     }
 
     private fun createButton(text: String, onClickListener: View.OnClickListener): Button {
-        Log.i(TAG, "createButton: $text")
+        Log.i(TAG, "createButton")
         val button = Button(context).apply {
             layoutParams = AppBarLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
