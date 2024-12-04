@@ -5,6 +5,8 @@
     <string name="open_fragment">Open Next Normal Stack Fragment</string>
     <string name="open_sheet_button">Open standard sheet</string>
     <string name="pop_fragment">Pop Stack Fragment</string>
+    <string name="replace_content">Replace content with snapshot</string>
+    <string name="regular_formsheet_fragment">Open Regular FormSheet</string>
     <string name="expanded">Expanded</string>
     <string name="half_expanded">HalfExpanded</string>
     <string name="collapsed">Collapsed</string>

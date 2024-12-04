@@ -55,8 +55,10 @@ class DimmedStandardBottomSheet : Fragment(), LifecycleEventObserver, Animation.
                 ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.MATCH_PARENT
             )
-            setBackgroundColor(Color.BLACK)
-            alpha = 0.4F
+//            setBackgroundColor(Color.BLACK)
+            setBackgroundColor(Color.TRANSPARENT)
+            alpha = 0.4f
+//            alpha = 0f
             id = View.generateViewId()
         }
     }
@@ -81,17 +83,11 @@ class DimmedStandardBottomSheet : Fragment(), LifecycleEventObserver, Animation.
         childFragmentManager.commit(allowStateLoss = true) {
             setReorderingAllowed(true)
             add(requireView().id, createBottomSheetFragment(), "StandardBottomSheet")
-//            add(StandardBottomSheet(), "StandardBottomSheet")
         }
     }
 
     override fun onResume() {
         super.onResume()
-//        childFragmentManager.commit(allowStateLoss = true) {
-//            setReorderingAllowed(true)
-//            add(requireView().id, StandardBottomSheet(), "StandardBottomSheet")
-////            add(StandardBottomSheet(), "StandardBottomSheet")
-//        }
     }
 
     private fun createBottomSheetFragment(): StandardBottomSheet {
@@ -131,4 +127,6 @@ class DimmedStandardBottomSheet : Fragment(), LifecycleEventObserver, Animation.
     }
 
     override fun onAnimationRepeat(animation: Animation?) = Unit
+
+    
 }
